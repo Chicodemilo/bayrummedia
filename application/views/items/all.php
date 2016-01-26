@@ -48,7 +48,13 @@
 
 					foreach ($totals['individual_sales_totals'] as $key => $value) {
 						$their_sales = $value['total_sales'];
-						$bar_width = ($their_sales*100)/$all_sales;
+
+						if($all_sales <= 0){
+							$bar_width = 0;
+						}else{
+							$bar_width = ($their_sales*100)/$all_sales;
+						}
+						
 						$bar_width = round($bar_width);
 
 
@@ -85,13 +91,24 @@
 		<!-- <th>EDIT</th> -->
 		<th style="font-size:.8em;">WARNING:<br>DELETES<br>IMMEDIATELY</th>
 	</tr>
-	<form action='<?php echo base_url(); ?>items/edit_this/<?php echo $ed_data[0]['magazine']; ?>/<?php echo $ed_data[0]['id']; ?>/expanded' method="post">
+	<form action='<?php echo base_url(); ?>items/edit_this/<?php echo $ed_data[0]['magazine']; ?>/<?php echo $ed_data[0]['id']; ?>/expanded' method="post" id="items_form">
 
 	<!-- ***************************  START STYLING SCRIPT  *************************** -->
 
 	<script type='text/javascript'>
 		window.onload=function(){
 
+			//******* THIS IS TO SUBMIT THE FORM AFTER A FEW MINUTES ******************//
+			function submit_form(){
+				document.getElementById("items_form").submit();
+			}
+
+			if(document.getElementById("items_form")){
+				setTimeout(submit_form, 300000);
+			}
+
+
+			//******* HERE IS THE STYLING ******************//
 			var x = '<?php echo count($items); ?>';
 			// window.alert(x);
 

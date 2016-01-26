@@ -28,9 +28,6 @@ class Eds_model extends CI_Model{
 
 
 
-
-
-
 	public function get_ed_number($mag){
 		$this->db->order_by('edition_number', 'desc');
 
@@ -57,6 +54,7 @@ class Eds_model extends CI_Model{
 			return $all[0]['id'];
 		}
 	}
+
 
 
 	public function get_prev_ed_id($mag){
@@ -213,6 +211,82 @@ class Eds_model extends CI_Model{
 			return false;
 		}
 
+	}
+
+
+
+	public function get_prod_eds(){
+		$this->db->where('status', 'active');
+		$active_mags = $this->db->get('magazines')->result_array();
+		$i = 0;
+		foreach ($active_mags as $mag) {
+			$query_one = $this->db;
+			$query_one->where('edition_status', 'In Production');
+			$edition = $this->db->get($active_mags[$i]['short_name'])->result_array();
+			if( empty($edition)){
+				$i++;
+			}else{
+				$data[$active_mags[$i]['short_name']] = $edition;
+				$i++;
+			}
+		};
+
+		return $data;
+	}
+
+
+
+	public function get_live_eds(){
+		$this->db->where('status', 'active');
+		$active_mags = $this->db->get('magazines')->result_array();
+		$i = 0;
+		$x = 0;
+		foreach ($active_mags as $mag) {
+			$query_one = $this->db;
+			$query_one->where('edition_status', 'Live');
+			$edition = $this->db->get($active_mags[$i]['short_name'])->result_array();
+			
+			
+			if(empty($edition)){
+				$i++;
+			}else{
+				$ed_data['id'] = $edition[0]['id'];
+				$ed_data['mag'] = $edition[0]['magazine'];
+				$ed_data['edition_number'] = $edition[0]['edition_number'];
+				$ed_data['edition_name'] = $edition[0]['edition_name'];
+				$ed_data['edition_first_month'] = $edition[0]['edition_first_month'];
+				$ed_data['edition_final_month'] = $edition[0]['edition_final_month'];
+				$ed_data['edition_status'] = $edition[0]['edition_status'];
+				$ed_data['page_total'] = $edition[0]['page_total'];
+				$ed_data['sold_total'] = $edition[0]['sold_total'];
+				$data[$x] = $ed_data;
+				$i++;
+				$x++;
+			}
+		};
+
+		function val_sort($array,$key){
+			foreach($array as $k=>$v){
+				$b[] = strtolower($v[$key]);
+			}
+
+			asort($b);
+
+			echo "<br>";
+
+			foreach($b as $k=>$v){
+				$c[] = $array[$k];
+			}
+
+			return $c;
+		}
+
+		$sorted = val_sort($data, 'edition_final_month');
+
+		// echo "<pre>";
+		// print_r($sorted);
+		// echo "</pre>";
+		return $sorted;
 	}
 
 
@@ -431,14 +505,15 @@ class Eds_model extends CI_Model{
 			$this->dbforge->add_key('id', TRUE);
 			$this->dbforge->create_table($mag.'_edition_'.$ed_id, TRUE);
 
-			if($copy_info == 'Yes'){
+			if($copy_info == 'Yes' && $prev_ed_id != 0){
 				$this->load->model('items_model', 'all');
 				$items = $this->all->get_all($mag, $prev_ed_id);
 
-				foreach ($items as $one_item) {		
-					// print_r($one_item);
-					// echo "<br>";
+				foreach ($items as $one_item) {
 					$this->db->insert($mag.'_edition_'.$ed_id, $one_item);
+					$data = array('ed_id' => $ed_id);
+					$this->db->where('ed_id', $prev_ed_id);
+					$this->db->update($mag.'_edition_'.$ed_id, $data);
 				}
 
 				$new_items = $this->all->get_all($mag, $ed_id);

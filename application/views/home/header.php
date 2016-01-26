@@ -3,9 +3,16 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Bay Rum Media</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>css/bayrum.css">
+	<link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>css/pikaday.css">
+	<script src="<?php echo base_url() ?>javascript/moment.js"></script>
+	<script src="<?php echo base_url() ?>javascript/pikaday.js"></script>
+	
 </head>
 <body>
+<script type="text/javascript" src="<?php echo base_url() ?>javascript/bayrumjavascript.js"></script>
 <div id="head_title">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="326.814px" height="84.072px" viewBox="0 0 326.814 84.072" enable-background="new 0 0 326.814 84.072"
@@ -251,10 +258,10 @@
 			<td><a href="<?php echo base_url(); ?>home/index">HOME</a></td>
 			<td><a href="<?php echo base_url(); ?>home/magazines">MAGAZINES</a></td>
 			<td><a href="<?php echo base_url(); ?>advertisers/all">ADVERTISERS</a></td>
-			<td><a href="#">BILLING</a></td>
+			<!-- <td><a href="#">BILLING</a></td>
 			<td><a href="#">MILEAGE</a></td>
 			<td><a href="#">PAYCHECK</a></td>
-			<td><a href="#">DISTRIBUTION</a></td>
+			<td><a href="#">DISTRIBUTION</a></td> -->
 			<!-- <td><a href="#"></a></td> -->
 		</tr>
 	</table>

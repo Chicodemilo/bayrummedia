@@ -4,8 +4,12 @@
 	<meta charset="UTF-8">
 	<title>Bay Rum Media</title>
 	<link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>css/bayrum.css">
+	<link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>css/pikaday.css">
+	<script src="javascript/moment.js"></script>
+	<script src="javascript/pikaday.js"></script>
 </head>
 <body>
+<script type="text/javascript" src="<?php echo base_url() ?>javascript/bayrumjavascript.js"></script>
 <div id="head_title">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="326.814px" height="84.072px" viewBox="0 0 326.814 84.072" enable-background="new 0 0 326.814 84.072"

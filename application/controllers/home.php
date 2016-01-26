@@ -5,12 +5,11 @@ class Home extends CI_Controller{
 	function __construct(){
 		parent::__construct();
 		$this->is_logged_in();
+        
 	}
 
 	function is_logged_in(){
 		$is_logged_in = $this->session->userdata('is_logged_in');
-
-
 
 		// $session_name = $this->session->userdata('session_name');
 		// $last_activity = $this->session->userdata('last_activity');
@@ -21,11 +20,12 @@ class Home extends CI_Controller{
 		if(!isset($is_logged_in) || $is_logged_in != true){
 
 			//replace this with a view vvvvv
-			echo "You do not have permission to be here. <br>";
+			echo "You have been logged out. <br>";
 			echo "<a href='";
 			echo base_url();
 			echo "login'> Login </a>";
 			die();
+			redirect(base_url()."login");
 		}
 	}
 
@@ -41,7 +41,6 @@ class Home extends CI_Controller{
 
 
 		    $this->session->sess_destroy();
-		    // $this->index();
 		    redirect(base_url()."login");
 		}
 
@@ -52,13 +51,10 @@ class Home extends CI_Controller{
 
 		$this->load->model('eds_model', 'updater');
 		$updated = $this->updater->status_update();
-		$this->load->view('home/home_cal');
 
-		// if($updated == TRUE){
-		// 	echo "Status Updated";
-		// }else{
-		// 	echo "Updated Failed";
-		// }
+		$data['prod_mags'] = $this->updater->get_prod_eds();
+		$data['live_mags'] = $this->updater->get_live_eds();
+		$this->load->view('home/home_info', $data);
 
 		$this->load->view('home/footer');
 	}
@@ -76,6 +72,183 @@ class Home extends CI_Controller{
 		$this->load->view('magazines/mag_links');
 		$this->load->view('home/footer');
 
+	}
+
+//shows all the notes for a user
+	public function notes($mag){
+		$this->load->view('home/header');
+
+		$username = $this->session->userdata('username');
+		$this->load->model('mag_model', 'notes');
+		$data['user_notes'] = $this->notes->user_notes($mag, $username);
+		// $data['all_notes'] = $this->notes->all_notes($mag);
+		$data['mag'] = $mag;
+		$data['username'] = $username;
+
+		$this->load->view('magazines/user_notes', $data);
+		
+		$this->load->view('home/footer');
+	}
+
+//shows all the notes
+	public function all_notes($mag){
+		$this->load->view('home/header');
+
+		$username = $this->session->userdata('username');
+		$this->load->model('mag_model', 'notes');
+
+		$data['all_notes'] = $this->notes->all_notes($mag);
+		$data['mag'] = $mag;
+		$data['username'] = $username;
+
+		$this->load->model('user_model', 'users');
+		$data['users'] = $this->users->get_all_users();
+
+		$this->load->view('magazines/all_notes', $data);
+		
+		$this->load->view('home/footer');
+	}
+
+//inserts a new note
+	public function insert_note($mag){
+		$this->load->model('user_model', 'id_grabber');
+		$associated_user_id = $this->id_grabber->get_id($this->input->post('associated_user'));
+		$this->load->library("input");
+		$data = array (
+				'business' => $this->input->post('business'),
+				'contact_name' => $this->input->post('contact_name'),
+				'contact_phone' => $this->input->post('contact_phone'),
+				'contact_email' => $this->input->post('contact_email'),
+				'do_something_on' => $this->input->post('do_something_on'),
+				'do_what' => $this->input->post('do_what'),
+				'notes' => $this->input->post('notes'),
+				'associated_user' => $this->input->post('associated_user'),
+				'associated_user_id' => $associated_user_id,
+				);
+		$this->db->insert($mag.'_notes',$data);
+		redirect(base_url()."home/notes/".$mag);
+	}
+
+//inserts a new note and returns to all_notes view
+	public function insert_note_all_users($mag){
+		$this->load->model('user_model', 'id_grabber');
+		$associated_user_id = $this->id_grabber->get_id($this->input->post('associated_user'));
+		$this->load->library("input");
+		$data = array (
+				'business' => $this->input->post('business'),
+				'contact_name' => $this->input->post('contact_name'),
+				'contact_phone' => $this->input->post('contact_phone'),
+				'contact_email' => $this->input->post('contact_email'),
+				'do_something_on' => $this->input->post('do_something_on'),
+				'do_what' => $this->input->post('do_what'),
+				'notes' => $this->input->post('notes'),
+				'associated_user' => $this->input->post('associated_user'),
+				'associated_user_id' => $associated_user_id,
+				);
+		$this->db->insert($mag.'_notes',$data);
+		redirect(base_url()."home/all_notes/".$mag);
+	}
+
+//deletes a note
+	public function delete_note($mag, $note_id){
+		$this->db->where('id', $note_id);
+		$this->db->delete($mag.'_notes');
+		redirect(base_url()."home/notes/".$mag);
+	}
+
+//deletes a note and returns to the all_notes view
+	public function delete_note_all_users($mag, $note_id){
+		$this->db->where('id', $note_id);
+		$this->db->delete($mag.'_notes');
+		redirect(base_url()."home/all_notes/".$mag);
+	}
+
+
+//instert note changes into DB
+	public function edit_notes($mag){
+		echo '<br><br>';
+		$data = $_POST;
+		$length = count($data);
+		$item_count = $length / 10;
+
+		$data_chunk = array_chunk($data, 10, true);
+
+
+		for ($i=0; $i < $item_count; $i++) { 
+
+			$data = $data_chunk[$i];
+
+			// print_r($data);
+			// echo '<br><br>';
+
+			$data = array_values($data);
+
+			$id = $data[0];
+			$this->load->model('user_model', 'id_grabber');
+			$associated_user_id = $this->id_grabber->get_id($data[1]);
+
+			$insert = array('associated_user' => $data[1],
+							'associated_user_id' => $associated_user_id,
+							'business' => $data[3],
+							'contact_name' => $data[4],
+							'contact_email' => $data[5],
+							'contact_phone' => $data[6],
+							'notes' => $data[7],
+							'do_what' => $data[8],
+							'do_something_on' => $data[9]);
+
+
+			$this->db->where('id', $id);
+			$this->db->update($mag."_notes", $insert);
+
+		}
+
+
+		redirect(base_url()."home/notes/".$mag);
+	}
+
+//instert note changes into DB and returns to all_notes view
+	public function edit_notes_all_users($mag){
+		echo '<br><br>';
+		$data = $_POST;
+		$length = count($data);
+		$item_count = $length / 10;
+
+		$data_chunk = array_chunk($data, 10, true);
+
+
+		for ($i=0; $i < $item_count; $i++) { 
+
+			$data = $data_chunk[$i];
+
+			// print_r($data);
+			// echo '<br><br>';
+
+			$data = array_values($data);
+
+			$id = $data[0];
+
+			$this->load->model('user_model', 'id_grabber');
+			$associated_user_id = $this->id_grabber->get_id($data[1]);
+
+			$insert = array('associated_user' => $data[1],
+							'associated_user_id' => $associated_user_id,
+							'business' => $data[3],
+							'contact_name' => $data[4],
+							'contact_email' => $data[5],
+							'contact_phone' => $data[6],
+							'notes' => $data[7],
+							'do_what' => $data[8],
+							'do_something_on' => $data[9]);
+
+
+			$this->db->where('id', $id);
+			$this->db->update($mag."_notes", $insert);
+
+		}
+
+
+		redirect(base_url()."home/all_notes/".$mag);
 	}
 
 
@@ -158,6 +331,61 @@ class Home extends CI_Controller{
 		$this->dbforge->add_field($fields);
 		$this->dbforge->add_key('id', TRUE);
 		$this->dbforge->create_table($short_name, TRUE);
+
+
+		//creates a NOTES db for the new magazine
+		$fields = array('id' => array(
+										'type' => 'INT',
+										'constraint' => 5,
+										'unsigned' => TRUE,
+										'auto_increment' => TRUE
+										 ),
+
+						'business' => array(
+										'type' => 'VARCHAR',
+										'constraint' => 100,
+										),
+
+						'contact_name' => array(
+										'type' => 'VARCHAR',
+										'constraint' => 100,
+										),
+
+						'contact_email' => array(
+										'type' => 'VARCHAR',
+										'constraint' => 50
+										),
+						'contact_phone' => array(
+										'type' => 'VARCHAR',
+										'constraint' => 25
+										),
+
+						'do_something_on' => array(
+										'type' => 'DATE'
+										),
+
+						'do_what' => array(
+										'type' => 'VARCHAR',
+										'constraint' => 20, ),
+
+						'notes' => array(
+										'type' => 'VARCHAR',
+										'constraint' => 10000, ),
+
+						'associated_user' => array(
+										'type' => 'VARCHAR',
+										'constraint' => 25, ),
+
+						'associated_user_id' => array(
+										'type' => 'INT',
+										'constraint' => 4, ),
+		);
+
+
+
+		$this->dbforge->add_field($fields);
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table($short_name."_notes", TRUE);
 
 		// echo $short_name.' '.$long_name.' '.$market;
 		redirect(site_url('home/magazines'));

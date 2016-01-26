@@ -158,6 +158,26 @@ class Mag_model extends CI_Model{
 		return $result;
 	}
 
+	//gets the notes for a specific user
+	public function user_notes($mag, $username){
+		$this->db->order_by("do_something_on", "asc");
+		$this->db->where("associated_user", $username);
+		$result = $this->db->get($mag."_notes")->result_array();
+		// echo "<pre>";
+		// print_r($result);
+		// echo "</pre>";
+		return $result;
+	}
+
+	//gets notes for all users
+	public function all_notes($mag){
+		$this->db->order_by("associated_user", "asc");
+		$result = $this->db->get($mag."_notes")->result_array();
+		// echo "<pre>";
+		// print_r($result);
+		// echo "</pre>";
+		return $result;
+	}
 
 
 

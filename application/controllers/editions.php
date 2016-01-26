@@ -156,8 +156,6 @@ class Editions extends CI_Controller{
 			$edition_status = $this->initial_status->initial_status($edition_first_month, $edition_final_month, $edition_in_production);
 			
 
-			// echo $edition_status; // for testing
-
 			//inserts the values in to the db
 			$this->load->model('eds_model', 'insert');
 			$test = $this->insert->add($mag, $edition_number, $edition_name, $edition_first_month, $edition_final_month, $edition_status);

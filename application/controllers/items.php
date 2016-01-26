@@ -256,24 +256,18 @@ class Items extends CI_Controller{
 
 	//INSTERTS THE VALUES OF THE EDITED ITEM INTO THE DB
 	public function edit_this($mag, $ed_id, $view_size = "expanded"){
-		// $this->output->enable_profiler(TRUE); 
-		// echo "Hello Cleveland ".$mag." ".$ed_id."<br>";
-		// var_dump($_POST);
+		
 
 		$data = $_POST;
 		$length = count($data);
 		$item_count = $length / 14;
 
-		// echo $length." ".$item_count."<br>";
 		$data_chunk = array_chunk($data, 14, true);
 
-		// print_r($data_chunk[0]);
 
 		for ($i=0; $i < $item_count; $i++) { 
 
 			$data = $data_chunk[$i];
-			// print_r($data);
-			// echo "<br><br>";
 
 			$data = array_values($data);
 
