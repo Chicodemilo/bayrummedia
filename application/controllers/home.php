@@ -166,7 +166,6 @@ class Home extends CI_Controller{
 
 //instert note changes into DB
 	public function edit_notes($mag){
-		echo '<br><br>';
 		$data = $_POST;
 		$length = count($data);
 		$item_count = $length / 10;
