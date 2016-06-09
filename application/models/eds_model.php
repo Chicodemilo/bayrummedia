@@ -231,6 +231,9 @@ class Eds_model extends CI_Model{
 			}
 		};
 
+		if($i == 0){
+			$data = null;
+		}
 		return $data;
 	}
 
