@@ -216,7 +216,7 @@ class Eds_model extends CI_Model{
 
 
 	public function get_prod_eds(){
-		$data = "N";
+
 		$this->db->where('status', 'active');
 		$active_mags = $this->db->get('magazines')->result_array();
 		$i = 0;
@@ -232,8 +232,13 @@ class Eds_model extends CI_Model{
 			}
 		};
 
-
-		return $data;
+		if(isset($data)){
+			return $data;
+		}else{
+			$data = "N";
+			return $data;
+		}
+		
 	}
 
 

@@ -10,7 +10,9 @@
 			<th>SALES TO DATE</th>
 		</tr>
 		<?php 
+
 			if($prod_mags != "N"){
+
 				foreach($prod_mags AS $row){
 				echo "<tr><td><a href='";
 				echo base_url();
@@ -22,8 +24,8 @@
 				echo "<td>".$row[0]['edition_status']."</td><td>".$row[0]['page_total']."</td><td>$".$row[0]['sold_total'];
 				echo "</tr>";
 				}
-
 			}
+			
 
 		 ?>
 	</table>
