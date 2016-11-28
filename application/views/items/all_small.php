@@ -337,7 +337,7 @@
 
 
 			echo "<td>";
-			echo "$<input type='text' value='".$row['price']."' name='price".$row['id']."' size='7' style='display:inline; padding:3px; font-size:.7em;'>";
+			echo "$<input type='text' value='".$row['price']."' name='price".$row['id']."' size='9' style='display:inline; padding:5px; font-size:1em;'>";
 			echo "</td>";
 
 			
@@ -379,7 +379,7 @@
 				 </select></td>";
 
 
-			echo "<td><textarea name='comments".$row['id']."' id='comments' class='boxsizingBorder' rows='2'>".$row['comments']."</textarea></td>";
+			echo "<td><textarea name='comments".$row['id']."' id='comments' class='boxsizingBorder' rows='5'>".$row['comments']."</textarea></td>";
 
 
 			echo "<td><a href='".base_url()."items/delete/".$ed_data[0]['magazine']."/".$ed_data[0]['id']."/".$row['id']."' class='link_small'>DELETE</a></td>";

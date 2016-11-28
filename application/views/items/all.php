@@ -409,7 +409,7 @@
 
 
 			echo "<td>";
-			echo "$<input type='text' value='".$row['price']."' name='price".$row['id']."' size='7' style='display:inline; padding:3px; font-size:.7em;'>";
+			echo "$<input type='text' value='".$row['price']."' name='price".$row['id']."' size='9' style='display:inline; padding:5px; font-size:1em;'>";
 			echo "</td>";
 
 			echo "<td>$".$row['last_year_price']."</td>";
@@ -451,7 +451,7 @@
 				 </select></td>";
 
 
-			echo "<td><textarea name='comments".$row['id']."' id='comments' class='boxsizingBorder' rows='2'>".$row['comments']."</textarea></td>";
+			echo "<td><textarea name='comments".$row['id']."' id='comments' class='boxsizingBorder' rows='5'>".$row['comments']."</textarea></td>";
 
 			echo "<td>".$row['associated_user']."</td>";
 

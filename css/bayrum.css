@@ -114,7 +114,7 @@ select{
 
 .select_tiny{
 	border: none;
-	height: 10px;
+	height: 20px;
 	padding: 2px;
 	font-size: .8em;
 	border-radius: 3px;
@@ -354,7 +354,7 @@ fieldset{
 .s_and_d_head {font-size: .7em; font-weight: bold;}
 .s_and_d_head_above {font-size: 1.2em; font-weight: bold; color:#55704D;}
 .s_and_d_head td{padding: 9px;}
-.s_and_d_body {font-size: .8em;}
+.s_and_d_body {font-size: .9em;}
 .s_and_d_body td{padding: 3px;}
 
 
@@ -371,7 +371,7 @@ fieldset{
             box-sizing: border-box;
             display:block;/*reset from inline*/
     		width:100%;
-    		font-size: .7em;
+    		font-size: 1em;
     		padding: 2px;
 				}
 
